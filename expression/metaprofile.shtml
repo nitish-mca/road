@@ -1,0 +1,305 @@
+<html>
+<head>
+    <title>Rice Oligonucleotide Array Database</title>
+    <link rel=stylesheet type="text/css" href="/RAD.css">
+</head>
+
+<body>
+  
+    <table>
+
+	<!--#include virtual="/inc/ROAD_inc_header.shtml"--> 
+	
+	<tr>
+	    <td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_left_menu.shtml"-->
+
+	    </td>
+
+        <td width="5">
+        </td>
+
+	    <td class="main" valign="top" width="600">
+            <!-- INFORMATION GOES UNDERNEATH HERE -->
+      	    
+            <h2>Rice Affymetrix Metaprofiles</h2>
+            <br/>
+
+			We reclassified all the Affymetrix samples (1,155 hybridations) into anatomies and developmental stages, and 
+			the information for number of Affymetrix samples assigned for each metaprofile is provided in the following tables.
+
+            <br/><br/><br/>
+			
+			<b>Anatomy<b>
+			<table border='1' cellpadding='1' cellspacing='1' rules='cols'>
+
+				<tr align=center bgcolor=Orange>
+				<td><b>Metaprofile</b></td>
+				<td><b>Number of Samples</b></td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Whole_plant&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Whole_plant target=_blank>6</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Callus&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Callus target=_blank>41</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Suspension_cell&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Suspension_cell target=_blank>1</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Dry_seed&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Dry_seed target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Germinating_seed&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Germinating_seed target=_blank>16</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Plumule&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Plumule target=_blank>8</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Radicle&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Radicle target=_blank>8</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Coleoptile&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Coleoptile target=_blank>4</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Seedling&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Seedling target=_blank>166</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Shoot&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Shoot target=_blank>164</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Leaf&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Leaf target=_blank>242</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Stem&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Stem target=_blank>8</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Whole_internode&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Whole_internode target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Internode_pith_parenchyma&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Internode_pith_parenchyma target=_blank>6</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Root&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Root target=_blank>130</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Root_tip&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Root_tip target=_blank>12</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;SAM&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=SAM target=_blank>27</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Flag_leaf&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Flag_leaf target=_blank>20</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Spikelet&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Spikelet target=_blank>4</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Palea_lemma&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Palea_lemma target=_blank>4</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Stigma&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Stigma target=_blank>8</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Ovary&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Ovary target=_blank>9</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Developing_anther&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Developing_anther target=_blank>86</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Mature_anther&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Mature_anther target=_blank>37</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Embryosac&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Embryosac target=_blank>27</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Embryo&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Embryo target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Endosperm&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=anatomy&term=Endosperm target=_blank>15</a>&nbsp;</td>
+				</tr>
+
+			</table>
+			
+			<br/><br/>
+			<b>Developmental Stage<b>
+			<table border='1' cellpadding='1' cellspacing='1' rules='cols'>
+
+				<tr align=center bgcolor=Orange>
+				<td><b>Metaprofile</b></td>
+				<td><b>Number of Samples</b></td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Callus_suspension_cell&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=Callus_suspension_cell target=_blank>42</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Pregermination&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=Pregermination target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Germinating_seedling&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=Germinating_seedling target=_blank>68</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;1st_leaf&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=1st_leaf target=_blank>53</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;2nd_leaf&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=2nd_leaf target=_blank>244</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;3rd_leaf&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=3rd_leaf target=_blank>123</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;Tiller_initiation&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=Tiller_initiation target=_blank>57</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;Tillering_stage&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=Tillering_stage target=_blank>27</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;P1&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=P1 target=_blank>33</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;P2&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=P2 target=_blank>21</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;P3&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=P3 target=_blank>19</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;P4&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=P4 target=_blank>13</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;P5&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=P5 target=_blank>7</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;P6&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=P6 target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;S1&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=S1 target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;S2&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=S2 target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;S3&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=S3 target=_blank>10</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightYellow>
+				<td>&nbsp;S4&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=S4 target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+				<tr bgcolor=LightBlue>
+				<td>&nbsp;S5&nbsp;</td>
+				<td>&nbsp;<a href=/expression/meta_profile.php?type=developmental_stage&term=S5 target=_blank>3</a>&nbsp;</td>
+				</tr>
+
+			</table>
+
+            <!-- INFORMATION GOES ABOVE HERE -->
+
+			<br/>
+			<br/>
+			<font color="#708899">Last modified: <!--#echo var="LAST_MODIFIED" --></font>
+
+	    </td>
+
+		<td width="5">
+        </td>
+
+		<td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_right_menu.shtml"-->
+
+	    </td>
+
+	</tr>
+    </table>
+</body>
+</html>

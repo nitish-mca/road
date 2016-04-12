@@ -1,0 +1,77 @@
+<?php
+$host = 'localhost';
+$dbname = 'test';
+$username = 'root';
+$password = 'JustD01t!';
+
+// include function files for this application
+require_once('../RAD_fns.php'); 
+$conn = mysqli_connect($host, $username, $password, $dbname);  
+
+# db queries
+$q_exp_num = "select exp_id from experiment"; 
+$q_sam_num = "select sam_id from sample";
+
+
+$conn = db_connect();
+$result = @$conn->query($q_exp_num);
+$exp_num = $result->num_rows;
+
+
+$result = @$conn->query($q_sam_num);
+$sam_num = $result->num_rows;
+
+
+$result->free();
+$conn->close();
+
+do_html_header($doc_path);
+
+?>
+<h2>Search Rice Oligonucleotide Array Database Experiments</h2>
+<br/>
+<br/>
+
+Number of experiments in database: <b><?php echo $exp_num;?></b>
+<br/>
+Number of samples in database: <b><?php echo $sam_num;?></b>
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+<script type="text/JavaScript">
+	function SetExample(){
+		document.myform.search_term.value='stress';
+	}
+</script>
+
+<fieldset>
+    <form name='myform' method='get' action='/expression/experiment_search.php'>
+        <a href='/expression/experiment_search.php'>List all</a>&nbsp;experiments in the database or search for experiments containing keyword (case insensitive)
+        <br/>
+        <br/>
+        <input type='text' name='term' id='search_term' size='20'>
+        &nbsp;&nbsp;in&nbsp;&nbsp;
+        <select name='section'>
+            <option value='title'>Experiment Title</option>
+            <option value='contributor'>Contributor Name</option>
+            <option value='description'>Experiment Description</option>
+            <option value='platform'>Platform (eg. Affymetrix)</option>
+        </select>
+		&nbsp;&nbsp;
+		<INPUT TYPE="button" VALUE="Example" onClick="SetExample()">
+
+        <br/>
+        <br/>
+
+        <input type='submit' value='Submit'>&nbsp;&nbsp;
+        <input type='reset' value='Clear'>
+    </form>
+</fieldset>
+<?php
+
+do_html_footer($doc_path);
+
+?>

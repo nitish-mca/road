@@ -1,0 +1,357 @@
+<?php
+
+
+// include function files for this application
+require_once('../RAD_fns.php'); 
+
+$exp_id = $_GET["experiment"];
+$sort = $_GET["sort"];
+$order = $_GET["order"];
+
+$q_exp_sam_nums = "select * from sample where exp_id = '$exp_id'";
+$q_exp = "select * from experiment where exp_id = '$exp_id'";
+$q_exp_sams = "select * from sample where exp_id = '$exp_id'";
+
+# get number of sams in db
+$conn = db_connect();
+$result = @$conn->query($q_exp_sam_nums);
+$exp_sam_num = $result->num_rows;
+
+
+# get information for experiment
+$result = @$conn->query($q_exp);
+$r_exp = $result->fetch_assoc();
+
+
+# get information for each hyb, add filters
+$q_exp_sams_filt = addSorts($q_exp_sams, $sort, $order);
+$result = @$conn->query($q_exp_sams_filt);
+
+for ($i = 0; $i < $exp_sam_num; $i++) {
+	$row=$result->fetch_assoc();
+	$r_exp_sam_ids[$i] = $row['sam_id'];
+	$r_exp_sam_titles[$i] = $row['sam_title'];
+	$r_exp_sam_platforms[$i] = $row['platform'];
+	$r_exp_sam_poid[$i] = $row['po_id'];
+	$r_exp_sam_poname[$i] = $row['po_name'];
+	$r_exp_sam_eoid[$i] = $row['eo_id'];
+	$r_exp_sam_eoname[$i] = $row['eo_name'];
+}
+
+$result->free();
+$conn->close();
+
+do_html_header($doc_path);
+
+echo "			<h2>Search Rice Oligonucleotide Array Database Experiments</h2>\n";
+
+echo "			<br/>\n";
+echo "			<br/>\n";
+
+echo "			<a href='/expression/experiment.php'>Search</a> for another experiment\n";
+echo "			<br/>\n";
+echo "			<br/>\n";
+
+
+
+echo "			<fieldset>\n";
+
+echo "				   <table border='0' cellpadding='1' cellspacing='1'>\n";
+	
+echo "					<tr>\n";
+echo "					   <td width='150px'><b>Experiment ID</b></td>\n";
+echo "					   <td align='left' width='500px'>".$r_exp['exp_id']."</td>\n";
+echo "					</tr>\n";
+	
+echo "					<tr>\n";
+echo "					   <td><b>Experiment Title</b></td>\n";
+echo "					   <td align='left'>\n";
+echo "							  <a href='/expression/experiment_search.php?term=".$r_exp['exp_title']."&section=title'>".$r_exp['exp_title']."</a>\n";
+echo "					   </td>\n";
+echo "					</tr>\n";
+
+echo "					<tr>\n";
+echo "					   <td><b>Number of Samples</b></td>\n";
+echo "					   <td align='left'>$exp_sam_num</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr>\n";
+echo "					   <td><b>Organism(s)</b></td>\n";
+echo "					   <td align='left'>".$r_exp['organism']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr>\n";
+echo "					   <td><b>Summary</b></td>\n";
+echo "					   <td align='left'>".$r_exp['summary']."<br><br></td>\n";
+echo "					</tr>\n";
+
+echo "					<tr>\n";
+echo "					   <td><b>Overall design</b></td>\n";
+echo "					   <td align='left'>".$r_exp['design']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr>\n";
+echo "					   <td><b>Contributor(s)</b></td>\n";
+echo "					   <td align='left'>\n";
+echo "							  <a href='/expression/experiment_search.php?term=".$r_exp['contributor']."&section=contributor'>".$r_exp['contributor']."</a>\n";
+echo "					   </td>\n";
+echo "					</tr>\n";
+
+echo "					<tr>\n";
+echo "					   <td><b>Citation(s)</b></td>\n";
+echo "					   <td align='left'>\n";
+$citations = explode (",", $r_exp['citation']);
+$j=0;
+for (;$j<(sizeof($citations)-1);$j++ ){
+	echo "<a href=http://www.ncbi.nlm.nih.gov/sites/entrez?Db=Pubmed&term=$citations[$j][UID] target=_blank>$citations[$j]</a>,";
+}
+echo "<a href=http://www.ncbi.nlm.nih.gov/sites/entrez?Db=Pubmed&term=$citations[$j][UID] target=_blank>$citations[$j]</a>";
+echo "						</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr><td>&nbsp;</td><td></td></tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Submission date</b></td>\n";
+echo "					   <td align='left'>".$r_exp['sub_date']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Contact name</b></td>\n";
+echo "					   <td align='left'>".$r_exp['contact']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>E-mail(s)</b></td>\n";
+echo "					   <td align='left'>".$r_exp['email']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Phone</b></td>\n";
+echo "					   <td align='left'>".$r_exp['phone']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Fax</b></td>\n";
+echo "					   <td align='left'>".$r_exp['fax']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>URL</b></td>\n";
+echo "					   <td align='left'>".$r_exp['url']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Organization name</b></td>\n";
+echo "					   <td align='left'>".$r_exp['organization']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Department</b></td>\n";
+echo "					   <td align='left'>".$r_exp['department']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Lab</b></td>\n";
+echo "					   <td align='left'>".$r_exp['lab']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Street address</b></td>\n";
+echo "					   <td align='left'>".$r_exp['street']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>City</b></td>\n";
+echo "					   <td align='left'>".$r_exp['city']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>State/province</b></td>\n";
+echo "					   <td align='left'>".$r_exp['state']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>ZIP/Postal code</b></td>\n";
+echo "					   <td align='left'>".$r_exp['zip']."</td>\n";
+echo "					</tr>\n";
+
+echo "					<tr bgcolor='#EEEEEE'>\n";
+echo "					   <td><b>Country</b></td>\n";
+echo "					   <td align='left'>".$r_exp['country']."</td>\n";
+echo "					</tr>\n";
+
+echo "				</table>\n";
+
+echo "				<br />\n";
+
+echo "				<table width='100%' cellspacing='1' cellpadding='1' rules='cols' border='1'>\n";
+
+echo "					<tr bgcolor=Orange>\n";
+
+# sample number header
+echo "						<td>\n";
+echo "							   &nbsp;\n";
+echo "						</td>\n";
+
+# sample id header
+$header_id = headerLink($exp_id, "id", $order);
+echo "						<td>\n";
+echo "							   <b>$header_id</b>\n";
+echo "						</td>\n";
+
+# platform header
+echo "						<td>\n";
+echo "							   <b>Platform</b>\n";
+echo "						</td>\n";
+
+# sample name header
+$header_sam = headerLink($exp_id, "sam", $order);
+echo "						<td>\n";
+echo "							   <b>$header_sam</b>\n";
+echo "						</td>\n";
+
+echo "						<td>\n";
+echo "							   <b>PO ID</b>\n";
+echo "						</td>\n";
+
+echo "						<td>\n";
+echo "							   <b>PO Name</b>\n";
+echo "						</td>\n";
+
+echo "						<td>\n";
+echo "							   <b>EO ID</b>\n";
+echo "						</td>\n";
+
+echo "						<td nowrap='nowrap'>\n";
+echo "							   <b>EO Name</b>\n";
+echo "						</td>\n";
+
+echo "					</tr>\n";
+
+
+for ($i = 0; $i < $exp_sam_num; $i++) {
+
+	$rowbgcolor=($i%2==0?'LightYellow':'LightBlue');
+		
+	echo "                    <tr bgcolor=$rowbgcolor>\n";
+
+	$j = $i + 1;
+
+	# sample number field
+	echo "					   <td valign='center'>\n";
+	echo "						  <b>$j.</b>\n";
+	echo "					   </td>\n";
+
+	# sample id
+	echo "					   <td>\n";
+	echo "						   <a href='/expression/sample_detail.php?sample=$r_exp_sam_ids[$i]'>$r_exp_sam_ids[$i]</a>\n";
+	echo "					   </td>\n";
+
+	# platform
+	echo "					   <td>$r_exp_sam_platforms[$i]</td>\n";
+
+	echo "					   <td nowrap='nowrap'>\n";
+	echo "						   <a href='/expression/sample_detail.php?sample=$r_exp_sam_ids[$i]'>$r_exp_sam_titles[$i]</a>\n";
+	echo "					   </td>\n";
+
+	echo "					   <td>\n";
+	echo "						   <a href='http://www.plantontology.org/amigo/go.cgi?view=details&search_constraint=terms&depth=0&query=$r_exp_sam_poid[$i]'>$r_exp_sam_poid[$i]</a>\n";
+	echo "					   </td>\n";
+
+	echo "					   <td nowrap='nowrap'>\n";
+	echo "						   $r_exp_sam_poname[$i]\n";
+	echo "					   </td>\n";
+
+	echo "					   <td>\n";
+	echo "						   <a href='http://www.gramene.org/db/ontology/search?id=$r_exp_sam_eoid[$i]'>$r_exp_sam_eoid[$i]</a>\n";
+	echo "					   </td>\n";
+
+	echo "					   <td nowrap='nowrap'>\n";
+	echo "						   $r_exp_sam_eoname[$i]\n";
+	echo "					   </td>\n";
+
+	echo "					</tr>\n";
+}
+
+echo "	   			</table>\n";
+
+echo "			</fieldset>\n";
+
+
+do_html_footer($doc_path);
+
+
+#
+# addSorts(sql query, sort section, sort by) - modify sql query with sort information
+#
+function addSorts($q_exp_sams_filt, $sort, $order) {
+
+
+	if ($sort == "id") {
+
+		if ($order == "asc") {
+
+			$q_exp_sams_filt .= " order by sam_id asc";
+		}
+
+		elseif ($order == "desc") {
+
+			$q_exp_sams_filt .= " order by sam_id desc";
+		}
+	}
+
+	elseif ($sort == "sam") {
+
+		if ($order == "asc") {
+
+			$q_exp_sams_filt .= " order by sam_title asc";
+		}
+
+		elseif ($order == "desc") {
+
+			$q_exp_sams_filt .= " order by sam_title desc";
+		}
+	}
+
+	return $q_exp_sams_filt;
+}
+
+
+#
+# headerLink () - return a column header link on how it should be sorted
+#
+function headerLink($exp, $sort, $order) {
+
+	$header;
+
+	if ($sort == "id") {
+
+		if ($order == "asc") {
+			$header = "<a href='/expression/experiment_detail.php?experiment=$exp&sort=$sort&order=desc'>ID</a>";
+		}
+
+		else {
+
+			$header = "<a href='/expression/experiment_detail.php?experiment=$exp&sort=$sort&order=asc'>ID</a>";
+		}
+	}
+
+	elseif ($sort == "sam") {
+
+		if ($order == "asc") {
+
+			$header = "<a href='/expression/experiment_detail.php?experiment=$exp&sort=$sort&order=desc'>Sample Name</a>";
+		}
+
+		else {
+
+			$header = "<a href='/expression/experiment_detail.php?experiment=$exp&sort=$sort&order=asc'>Sample Name</a>";
+		}
+	}
+
+
+	return $header;
+}
+
+?>

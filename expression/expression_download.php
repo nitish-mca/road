@@ -1,0 +1,147 @@
+<?php 
+$host = 'localhost';
+$dbname = 'test';
+$username = 'root';
+$password = 'JustD01t!';
+// include function files for this application
+require_once('../RAD_fns.php'); 
+$conn = mysqli_connect($host, $username, $password, $dbname);  
+$search_text = $_REQUEST["search_text"];
+$identifier_type = $_REQUEST["identifier_type"];
+$platform = Strtolower ($_REQUEST['platform']);
+$exp = $_REQUEST["exp"];
+$ave = $_REQUEST['ave'];
+
+$search_text = trim($search_text);
+$post_terms = explode(",", $search_text);
+$num_post_terms = count($post_terms);
+
+$search_terms=array();
+
+for ($i=0;$i<$num_post_terms;$i++){
+	$post_terms[$i] = trim($post_terms[$i]);
+    $search_terms[$i] = Strtolower($post_terms[$i]);
+	$search_terms[$i] = preg_replace ('/\s{1}/', '+', $search_terms[$i]);
+    if ( preg_match ('/^os\d{2}g\d{7}$/', $search_terms[$i]) ) {
+    	$search_terms[$i] = preg_replace ('/g/', 't', $search_terms[$i]);
+    }
+}
+
+if ($identifier_type=='elementid'){
+	for ($i=0;$i<$num_post_terms;$i++){
+		$search_terms[$i] = preg_replace ('/\'/', "''", $search_terms[$i]);
+		$search_terms[$i] = "'$search_terms[$i]'";
+	}
+	$probe_ids = join(",", $search_terms);
+	$query_probe = "select * from probe
+			 where
+			 lower(probeid) in($probe_ids)
+			 and lower(platform) = '$platform'
+			 order by probeid
+			 ";
+}elseif ($identifier_type=='geneid'){
+	$search_sentences=array();
+	foreach ($search_terms as $id){
+		array_push ($search_sentences, "lower(MSU6_id) like '%$id%'");
+		array_push ($search_sentences, "lower(RAP3_id) like '%$id%'");
+		array_push ($search_sentences, "lower(cDNA_id) like '%$id%'");
+	}
+	$search_sentences = join(" or ", $search_sentences);
+	$query_probe = "select * from probe
+			 where
+			 ($search_sentences)
+			 and lower(platform) = '$platform'
+			 order by probeid
+			 ";
+}
+
+$conn = db_connect();
+$result = @$conn->query($query_probe);
+$num_probes = $result->num_rows;
+
+$probe_ids = array();
+
+for ($count=0; $row = $result->fetch_assoc(); $count++){
+	$row{'probeid'} = preg_replace ('/\'/', "''", $row{'probeid'});
+	$probe_ids[$count] = "'".$row{'probeid'}."'";
+}
+
+if ($ave == 'Y'){
+	$query_sam = "select sam_id, short_title from sample_ave where exp_id='$exp' order by id";
+}else{
+	$query_sam = "select sam_id, short_title from sample where exp_id='$exp' order by id";
+}
+
+$result = @$conn->query($query_sam);
+
+$sam_ids=array();
+$sam_titles=array();
+
+for ($count=0; $row = $result->fetch_assoc(); $count++){
+	$sam_ids[$count] = $row['sam_id'];
+	$sam_titles[$count] = $row['short_title'];
+}
+
+$num_sams = count ($sam_ids);
+
+$sam_ids_combined = join (",", $sam_ids);
+$probe_ids_combined = join(",", $probe_ids);
+
+if ($ave == 'Y'){
+	$query = "select probeid,$sam_ids_combined from $platform"."_ave
+			 where
+			 lower(probeid) in($probe_ids_combined)
+			 order by probeid";
+}else{
+	if ($platform == 'affymetrix'){
+		$query = "select affymetrix1.probeid,$sam_ids_combined from affymetrix1, affymetrix2
+				where
+				affymetrix1.probeid=affymetrix2.probeid
+				and
+				lower(affymetrix1.probeid) in($probe_ids_combined)
+				order by affymetrix1.probeid";
+	}else {
+		$query = "select probeid,$sam_ids_combined from $platform
+				where
+				lower(probeid) in($probe_ids_combined)
+				order by probeid";
+	}
+}
+
+$result = @$conn->query($query);
+
+$expression = array();
+
+for ($count=0; $row = $result->fetch_row(); $count++){
+	$expression[$count] = $row;
+}
+
+$num_exprs = count ($expression);
+
+$result->free();
+$conn->close();
+
+
+//header("Content-type: text/plain");
+header("Content-Type: application/octet-stream ; charset=UTF-8");
+Header("Content-Disposition: attachment; filename=$exp.txt");
+
+echo "Probe ID";
+for ($i=0; $i<$num_sams; $i++){
+	echo "\t$sam_titles[$i]";
+}
+echo "\n";
+
+for ($i = 0; $i < $num_exprs; $i++) {
+
+	$data = $expression[$i];
+	
+	$n=count($data);
+
+	for ($j=0;$j<$n;$j++){
+		echo "$data[$j]\t";
+	}
+	echo "\n";
+}
+
+?>

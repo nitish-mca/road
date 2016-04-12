@@ -1,0 +1,387 @@
+<?php
+$host = 'localhost';
+$dbname = 'test';
+$username = 'root';
+$password = 'JustD01t!';
+// include function files for this application
+require_once('../RAD_fns.php'); 
+$conn = mysqli_connect($host, $username, $password, $dbname);  
+$MAX_IDS = 1000;
+$MAX_TITLE = 45;
+
+$search_text = $_REQUEST["search_text"];
+$identifier_type = $_REQUEST["identifier_type"];
+$platform = Strtolower ($_REQUEST['platform']);
+$exp = $_REQUEST["exp"];
+
+if ( isset($REQUEST['search_file'])){
+	if (is_uploaded_file($_FILES['search_file']['tmp_name'])){
+		$input_file = $_FILES['search_file']['tmp_name'];
+		$fp=fopen($input_file, 'r');
+		$input_file_line=fread($fp, filesize($input_file));
+		$input_file_line=trim($input_file_line);
+		fclose($fp);
+
+		if ($input_file_line != "") {
+			$search_text = $input_file_line;
+		}
+	}
+}
+
+$search_text = trim($search_text);
+$post_terms = explode("\n", $search_text);
+$num_post_terms = count($post_terms);
+
+if ($search_text == ""){
+	do_html_header($doc_path);
+	echo "No search terms. Please go back and try again!\n";
+	do_html_footer($doc_path); 
+	exit;
+}
+
+if ($num_post_terms > $MAX_IDS){
+	do_html_header($doc_path);
+	echo "Your search terms have exceeded the max limitation (1000 terms). Please go back to exclude some terms and try again!\n";
+	do_html_footer($doc_path); 
+	exit;
+}
+
+if ($exp == '0'){
+	do_html_header($doc_path);
+	echo "No experiment selected. Please go back and try again!\n";
+	do_html_footer($doc_path); 
+	exit;
+}
+
+$search_terms=array();
+
+for ($i=0;$i<$num_post_terms;$i++){
+	$post_terms[$i] = trim($post_terms[$i]);
+    $search_terms[$i] = Strtolower($post_terms[$i]);
+    if ( preg_match ('/^os\d{2}g\d{7}$/', $search_terms[$i]) ) {
+    	$search_terms[$i] = preg_replace ('/g/', 't', $search_terms[$i]);
+    }
+}
+
+$search_terms_combined = join(",", $search_terms);
+
+if ($identifier_type=='elementid'){
+	for ($i=0;$i<$num_post_terms;$i++){
+		$search_terms[$i] = preg_replace ('/\'/', "''", $search_terms[$i]);
+		$search_terms[$i] = "'$search_terms[$i]'";
+	}
+	$probe_ids = join(",", $search_terms);
+	$query_probe = "select * from probe
+			 where
+			 lower(probeid) in($probe_ids)
+			 and lower(platform) = '$platform'
+			 order by probeid
+			 ";
+}elseif ($identifier_type=='geneid'){
+	$search_sentences=array();
+	foreach ($search_terms as $id){
+		array_push ($search_sentences, "lower(MSU6_id) like '%$id%'");
+		array_push ($search_sentences, "lower(RAP3_id) like '%$id%'");
+		array_push ($search_sentences, "lower(cDNA_id) like '%$id%'");
+	}
+	$search_sentences = join(" or ", $search_sentences);
+	$query_probe = "select * from probe
+			 where
+			 ($search_sentences)
+			 and lower(platform) = '$platform'
+			 order by probeid
+			 ";
+}
+
+$conn = db_connect();
+
+$result = @$conn->query($query_probe);
+$num_probes = $result->num_rows;
+
+if ($num_probes == 0){
+	do_html_header($doc_path);
+	echo "No probe found. Please go back and try again!\n";
+	do_html_footer($doc_path); 
+	exit;
+}
+
+$probe_info = array();
+
+for ($count=0; $row = $result->fetch_assoc(); $count++){
+	$probe_info[$count] = $row;
+}
+
+$experiments=array();
+# get list of experiments in the database
+$q_exp = "select exp_id, short_title from experiment where platform='$platform'";
+$result = @$conn->query($q_exp);
+
+while ($row = $result->fetch_row()) {
+	array_push($experiments, $row);
+}
+
+$query_sam_info = "select * from sample where exp_id='$exp' order by id";
+$result = @$conn->query($query_sam_info);
+
+$sam_info=array();
+
+for ($count=0; $row = $result->fetch_row(); $count++){
+	$sam_info[$count] = $row;
+}
+
+$num_sam_info = count ($sam_info);
+
+$query_annotation = "select * from annotation";
+$result = @$conn->query($query_annotation);
+
+$annotation=array();
+
+while ($row = $result->fetch_assoc()) {
+	$annotation[$row['geneid']]=$row['annotation'];
+}
+
+$result->free();
+$conn->close();
+
+do_html_header($doc_path);
+
+echo "<h2>Expression Data Search Results</h2><br/>\n";
+
+?>
+<form action='expression_search.php' method='post'>
+	<table cellpadding='4' cellspacing='3' width='600'>
+
+		<tr>
+			<td>
+				Select an experiment:
+			</td>
+			<td>
+
+<?php
+# experiment field
+
+echo "				<select name='exp'>\n";
+echo "					<option value='0'>-- Select an experiment --</option>\n";
+
+foreach ($experiments as $experiment) {
+    $exp_id = $experiment[0];
+    if (strlen($experiment[1]) > $MAX_TITLE) {
+        $exp_title = substr($experiment[1], 0, $MAX_TITLE);
+		$exp_title .= "...";
+    }else {  
+        $exp_title = $experiment[1];
+    }
+	if ($exp_id == $exp){
+		echo "					<option value='$exp_id' selected>$exp_id - $exp_title</option>\n";
+	}else {
+		echo "					<option value='$exp_id'>$exp_id - $exp_title</option>\n";
+	}
+}
+
+echo "				</select>\n";
+?>
+
+			</td>
+		</tr>
+
+		<tr>
+			<td>
+					Display format:
+			</td>
+			<td>
+				<input type="Checkbox" name="Ave" value="1" <?php if (isset($_REQUEST['Ave'])) echo 'checked'; ?> >Show Average
+				<input type="Checkbox" name="Heatmap" value="1" <?php if (isset($_REQUEST['Heatmap'])) echo 'checked'; ?> >Show Heatmap
+				<input type="Checkbox" name="CEGraph" value="1" <?php if (isset($_REQUEST['CEGraph'])) echo 'checked'; ?> >Classic Expression Graph
+				<br />
+				<?php 
+					if ($platform=='affymetrix'){
+						?>
+						&nbsp;Select Heatmap Scale Bar:
+						<input type="Radio" name="SingleScale" value="S1" <?php if ($_REQUEST['SingleScale']=='S1') echo 'checked'; ?> >5,9,13
+						<input type="Radio" name="SingleScale" value="S2" <?php if ($_REQUEST['SingleScale']=='S2') echo 'checked'; ?> >5,10,15
+						<input type="Radio" name="SingleScale" value="S3" <?php if ($_REQUEST['SingleScale']=='S3') echo 'checked'; ?> >7,12,17
+						<?php
+					}else {
+						?>
+						&nbsp;Select Heatmap Scale Bar:
+						<input type="Radio" name="TwoScale" value="T1" <?php if ($_REQUEST['TwoScale']=='T1') echo 'checked'; ?> >-1,0,1
+						<input type="Radio" name="TwoScale" value="T2" <?php if ($_REQUEST['TwoScale']=='T2') echo 'checked'; ?> >-2,0,2
+						<input type="Radio" name="TwoScale" value="T3" <?php if ($_REQUEST['TwoScale']=='T3') echo 'checked'; ?> >-3,0,3
+						<?php
+					}
+				?>
+
+			</td>
+		</tr>
+
+
+		<tr>
+			<td>
+			</td>
+			<td>
+				<input type='hidden' name='platform' value='<?php echo $platform;?>'>
+				<input type='hidden' name='search_text' value="<?php echo $search_text;?>">
+				<input type='hidden' name='identifier_type' value='<?php echo $identifier_type;?>'>
+				<input type ="submit" value="Update">&nbsp;&nbsp;
+				
+			</td>
+		</tr>
+	</table>
+</form>
+
+<?php
+
+if (isset($_REQUEST['Heatmap'])){
+	
+	echo "<br /><br />\n";
+	echo "<br /><b>Heatmap:</b>\n";
+	echo "<br /><br />\n";
+
+	$ave = isset($_REQUEST['Ave'])?'Y':'N';
+	if ($platform == 'affymetrix'){
+		echo '<img src="heatmap.php?platform='.$platform.'&exp='.$exp.'&scale='.$_REQUEST['SingleScale'].'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'" border=0 align=top>';
+		echo '<br /><br />';
+		echo '<a href="heatmap_high.php?platform='.$platform.'&exp='.$exp.'&scale='.$_REQUEST['SingleScale'].'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'">Download High Resolution Image</a>';
+	}else {
+		echo '<img src="heatmap.php?platform='.$platform.'&exp='.$exp.'&scale='.$_REQUEST['TwoScale'].'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'" border=0 align=top>';
+		echo '<br /><br />';
+		echo '<a href="heatmap_high.php?platform='.$platform.'&exp='.$exp.'&scale='.$_REQUEST['TwoScale'].'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'">Download High Resolution Image</a>';
+	}
+
+	echo '<br /><br />';
+}
+
+if (isset($_REQUEST['CEGraph'])){
+	
+	echo "<br /><br />\n";
+	echo "<br /><b>Classic Expression Graph:</b>\n";
+	echo "<br /><br />\n";
+
+	$ave = isset($_REQUEST['Ave'])?'Y':'N';
+	
+	echo '<img src="cegraph.php?platform='.$platform.'&exp='.$exp.'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'" border=0 align=top>';
+
+	echo '<br /><br />';
+	echo '<a href="cegraph_high.php?platform='.$platform.'&exp='.$exp.'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'">Download High Resolution Image</a>';
+	
+	echo '<br /><br />';
+}
+
+echo '<a href="expression_download.php?platform='.$platform.'&exp='.$exp.'&ave='.$ave.'&identifier_type='.$identifier_type.'&search_text='.$search_terms_combined.'">Download Expression Data</a><br /><br />';
+
+//Table containing formation about probes matched
+
+echo "<b>Probe matched:</b>\n";
+echo "<br /><br />\n";
+
+echo "<table border='1' cellpadding='1' cellspacing='1' rules='cols'>\n";
+
+echo "<tr align=center bgcolor=Orange>\n";
+echo "<td><b>No.</b></td>\n";
+echo "<td><b>Array Element ID</b></td>\n";
+echo "<td><b>Array Platform</b></td>\n";
+echo "<td><b>Matched MSU/TIGR Gene ID</b></td>\n";
+echo "<td><b>Matched RAP3 Gene ID</b></td>\n";
+echo "<td><b>Matched KOME cDNA ID</b></td>\n";
+echo "</tr>\n";
+
+for ($i = 0; $i < $num_probes; $i++) {
+	
+	$rowbgcolor=($i%2==0?'LightYellow':'LightBlue');
+	echo "<tr bgcolor=$rowbgcolor>\n";
+	
+	$row = $probe_info[$i];
+
+	echo "<td>&nbsp;";
+	echo $i+1;
+	echo "&nbsp;</td>\n";
+	
+	echo "<td>&nbsp;";
+	echo $row['probeid'];
+	echo "&nbsp;</td>\n";
+
+	echo "<td>&nbsp;";
+	echo $row['platform'];
+	echo "&nbsp;</td>\n";
+
+	echo "<td>";
+	$ids= explode(";", $row['MSU6_id']);
+	sort($ids);
+	foreach ($ids as $id){
+		if ($id != 'N/A'){
+			$locus=$id;
+			$locus = preg_replace ('/\.\d+$/', '', $locus);
+			$locsu_annotation=$annotation[$locus];
+			echo "&nbsp;<a href=http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?db=osa1r6&orf=$id target=_blank>$id</a>&nbsp;<a href=# title=\"$locsu_annotation\">Annotation</a><br/>\n";
+		}else {
+			echo "&nbsp;$id&nbsp;<br/>\n";
+		}
+	}
+	echo "</td>\n";
+
+	echo "<td>";
+	$ids= explode(";", $row['RAP3_id']);
+	sort($ids);
+	foreach ($ids as $id){
+		if ($id != 'N/A'){
+			echo "&nbsp;<a href=http://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/build5?name=$id target=_blank>$id</a>&nbsp;<a href=# title=\"$annotation[$id]\">Annotation</a><br/>\n";
+		}else {
+			echo "&nbsp;$id&nbsp;<br/>\n";
+		}
+	}
+	echo "</td>\n";
+
+	echo "<td>";
+	$ids= explode(";", $row['cDNA_id']);
+	sort($ids);
+	foreach ($ids as $id){
+		echo "&nbsp;$id&nbsp;<br/>\n";
+	}
+	echo "</td>\n";
+
+	echo "</tr>\n";
+
+}
+
+echo "</table>\n";
+
+echo "<br /><br />\n";
+echo "<b>Detailed Information about the experiment:&nbsp;<a href=/expression/experiment_detail.php?experiment=$exp&sort=id&order=asc target=_blank>$exp</a></b><br />\n";
+echo "<b>Sample list:</b>\n";
+echo "<br /><br />\n";
+
+echo "<table border='1' cellpadding='1' cellspacing='1' rules='cols'>\n";
+
+echo "<tr align=center bgcolor=Orange>\n";
+echo "<td><b>Sample ID</b></td>\n";
+echo "<td><b>Platform</b></td>\n";
+echo "<td><b>Sample Name</b></td>\n";
+echo "</tr>\n";
+
+for ($i = 0; $i < $num_sam_info; $i++) {
+
+	$rowbgcolor=($i%2==0?'LightYellow':'LightBlue');
+	echo "<tr bgcolor=$rowbgcolor>\n";
+	
+	$info = $sam_info[$i];
+	
+	echo "<td>";
+	echo "&nbsp;<a href='/expression/sample_detail.php?sample=$info[1]' target=_blank>$info[1]</a>&nbsp;";
+	echo "</td>\n";
+	
+	echo "<td>&nbsp;";
+	echo $info[3];
+	echo "&nbsp;</td>\n";
+
+	echo "<td>&nbsp;";
+	echo $info[4];
+	echo "&nbsp;</td>\n";
+	
+	echo "</tr>\n";
+}
+
+echo "</table>\n";
+
+do_html_footer($doc_path); 
+
+?>

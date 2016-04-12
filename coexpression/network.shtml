@@ -1,0 +1,127 @@
+<html>
+<head>
+    <title>Rice Oligo Array Database</title>
+    <link rel=stylesheet type="text/css" href="../RAD.css">
+</head>
+
+<body>
+    
+    <table>
+
+	<!--#include virtual="/inc/ROAD_inc_header.shtml"--> 
+	
+	<tr>
+	    <td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_left_menu.shtml"-->
+
+	    </td>
+
+        <td width="5">
+        </td>
+
+	    <td class="main" valign="top" width="600">
+            <!-- INFORMATION GOES UNDERNEATH HERE -->
+      	    
+            <h2>Rice Coexpression Network</h2>
+            <br/>
+
+			Paste your MSU Rice Genome Annotation Project (previously TIGR) locus identifiers (like Os01g01180, LOC_Os01g01180) or gene model
+			identifiers (like Os01g01180.1, LOC_Os01g01180.1) in the textbox below and press the submit button. 
+			This tool will construct the coexpression network of the query genes under the selected PCC cutoff and depth of network.
+			<br />
+			<br />
+			<br />
+			
+			<script type="text/JavaScript">
+				function SetExample(){
+					document.myform.genelist.value='LOC_Os02g33180\nLOC_Os02g54160\nLOC_Os03g12470\nLOC_Os03g14120\nLOC_Os05g45420\nLOC_Os06g49430\nLOC_Os03g17700\nLOC_Os09g25060\nLOC_Os12g32980\nLOC_Os11g06410\n';
+				}
+				function SetCutoff75(){
+					document.myform.cutoff.value='0.75';
+				}
+				function SetCutoff8(){
+					document.myform.cutoff.value='0.8';
+				}
+			</script>
+
+            <fieldset>
+			<form name='myform' method="post" action="draw_network.php">
+				<table cellpadding='4' cellspacing='3' width='100%'>
+		
+					<tr>
+						<td>
+							Identifier terms, one per line:<br /><br />
+							<INPUT TYPE="button" VALUE="Example" onClick="SetExample()">
+						</td>
+						<td>
+							<textarea name="genelist" cols="50" rows="10" wrap="physical"></textarea>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Select network type:
+						</td>
+						<td>
+							<input type="radio" name="type" value="general" onClick="SetCutoff75()" checked>General
+							<input type="radio" name="type" value="abiotic" onClick="SetCutoff8()">Abiotic Stress
+							<input type="radio" name="type" value="biotic" onClick="SetCutoff8()">Biotic Stress
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Correlation Coefficient cutoff:
+						</td>
+						<td>
+							<input type="Text" name="cutoff" value="0.75" size="16">
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Depth to search coexpressed genes:
+						</td>
+						<td>
+							<input type="radio" name="depth" value="1" checked>1
+							<input type="radio" name="depth" value="2">2
+							<input type="radio" name="depth" value="3">3
+						</td>
+					</tr>
+			
+					<tr>
+						<td>
+						</td>
+						<td>
+							<input type ="submit" value="Submit">&nbsp;&nbsp;
+							<input type ="reset" value="Clear">
+						</td>
+					</tr>
+
+				</table>	
+			</form>
+			</fieldset>
+
+
+            <!-- INFORMATION GOES ABOVE HERE -->
+
+			<br/>
+			<br/>
+			<font color="#708899">Last modified: <!--#echo var="LAST_MODIFIED" --></font>
+
+	    </td>
+
+		<td width="5">
+        </td>
+
+		<td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_right_menu.shtml"-->
+
+	    </td>
+
+	</tr>
+    </table>
+</body>
+</html>

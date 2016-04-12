@@ -1,0 +1,100 @@
+<html>
+<head>
+    <title>Rice Oligonucleotide Array Database</title>
+    <link rel=stylesheet type="text/css" href="/RAD.css">
+</head>
+
+<body>
+    
+    <table>
+
+	<!--#include virtual="/inc/ROAD_inc_header.shtml"--> 
+	
+	<tr>
+	    <td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_left_menu.shtml"-->
+
+	    </td>
+
+        <td width="5">
+        </td>
+
+	    <td class="main" valign="top" width="600">
+            <!-- INFORMATION GOES UNDERNEATH HERE -->
+      	    
+            <h2>Highly Expressed Genes in Rice</h2> 
+ 
+			<p>Based on the reclassified anatomy tissues of Affymetrix data, we developed 
+				this tool to quickly identify a set of genes that are highly expressed in certain 
+				anatomy tissue. The output is a list of rice Affymetrix probe sets, the corresponding 
+				gene models and the expression intensities.</p>
+				
+			<p>After the results are generated on a new web page, please click the Affymetrix 
+				probe set ID for detailed information.
+		 		 
+			<br /> 
+			<hr /> 
+			<form method="post" action="top_expression.php"> 
+		 
+					<p>Search for top&nbsp;<input type="text"
+					name="number" value="10" size="5" /> highly expressed genes in
+					<br /><br /><b>Tissue</b> &nbsp;
+					<select name="tissue"> 
+							<option value="Whole_plant">Whole plant</option>
+							<option value="Callus">Callus</option>
+							<option value="Suspension_cell">Suspension cell</option>
+							<option value="Dry_seed">Dry seed</option>
+							<option value="Germinating_seed">Germinating seed</option> 
+							<option value="Plumule">Plumule</option> 
+							<option value="Radicle">Radicle</option> 
+							<option value="Coleoptile">Coleoptile</option> 
+							<option value="Seedling">Seedling</option> 
+							<option value="Shoot">Shoot</option> 
+							<option value="Leaf">Leaf</option> 
+							<option value="Stem">Stem</option> 
+							<option value="Whole_internode">Whole internode</option> 
+							<option value="Internode_pith_parenchyma">Internode pith parenchyma</option>
+							<option value="Root">Root</option> 
+							<option value="Root_tip">Root tip</option>
+							<option value="SAM">Shoot apical meristem</option> 
+							<option value="Flag_leaf">Flag leaf</option>
+							<option value="Spikelet">Spikelet</option> 
+							<option value="Palea_lemma">Palea/lemma</option> 
+							<option value="Stigma">Stigma</option> 
+							<option value="Ovary">Ovary</option> 
+							<option value="Developing_anther">Developing anther</option> 
+							<option value="Mature_anther">Mature anther</option> 
+							<option value="Embryosac">Embryosac</option>
+							<option value="Endosperm">Endosperm</option> 
+							<option value="Embryo">Embryo</option> 
+						</select> 
+						<br /><br /> 
+						with expression higher than&nbsp;<input type="text" name="cutoff" value="13" size="5" /> 
+						<br /><br /> 
+						<input type="submit" value="Submit" />&nbsp;&nbsp;<input type="reset" value="Clear" /></p> 
+		 
+			</form> 
+
+
+            <!-- INFORMATION GOES ABOVE HERE -->
+
+			<br/>
+			<br/>
+			<font color="#708899">Last modified: <!--#echo var="LAST_MODIFIED" --></font>
+
+	    </td>
+
+		<td width="5">
+        </td>
+
+		<td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_right_menu.shtml"-->
+
+	    </td>
+
+	</tr>
+    </table>
+</body>
+</html>

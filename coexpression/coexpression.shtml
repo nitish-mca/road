@@ -1,0 +1,113 @@
+<html>
+<head>
+    <title>Rice Oligo Array Database</title>
+    <link rel=stylesheet type="text/css" href="../RAD.css">
+</head>
+
+<body>
+    
+    <table>
+
+	<!--#include virtual="/inc/ROAD_inc_header.shtml"--> 
+	
+	<tr>
+	    <td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_left_menu.shtml"-->
+
+	    </td>
+
+        <td width="5">
+        </td>
+
+	    <td class="main" valign="top" width="600">
+            <!-- INFORMATION GOES UNDERNEATH HERE -->
+      	    
+            <h2>Rice Coexpression Analysis</h2>
+            <br/>
+
+			Paste your MSU Rice Genome Annotation Project (previously TIGR) locus identifiers (like Os01g01180, LOC_Os01g01180) or gene model identifiers 
+			(like Os01g01180.1, LOC_Os01g01180.1) in the textbox below and press the submit button. This tool will give out
+			the coexpressed genes of the query gene under the selected PCC cutoff.
+			<br />
+			<br />
+			The search will take some time as the dataset is very big. Please be patient.
+			<br />
+			<br />
+			<br />
+			
+			<script type="text/JavaScript">
+				function SetExample(){
+					document.myform.genelist.value='LOC_Os05g45420\nLOC_Os01g03820\n';
+				}
+			</script>
+
+            <fieldset>
+			<form name='myform' method="post" action="coexpression_search.php">
+				<table cellpadding='4' cellspacing='3' width='100%'>
+		
+					<tr>
+						<td>
+							Identifier terms, one per line:<br /><br />
+							<INPUT TYPE="button" VALUE="Example" onClick="SetExample()">
+						</td>
+						<td>
+							<textarea name="genelist" cols="50" rows="10" wrap="physical"></textarea>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Select coexpression type:
+						</td>
+						<td>
+							<input type="radio" name="type" value="general" checked>General
+							<input type="radio" name="type" value="abiotic">Abiotic Stress
+							<input type="radio" name="type" value="biotic">Biotic Stress
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							Correlation Coefficient cutoff:
+						</td>
+						<td>
+							<input type="Text" name="cutoff" value="0.5" size="16">
+						</td>
+					</tr>
+			
+					<tr>
+						<td>
+						</td>
+						<td>
+							<input type ="submit" value="Submit">&nbsp;&nbsp;
+							<input type ="reset" value="Clear">
+						</td>
+					</tr>
+
+				</table>	
+			</form>
+			</fieldset>
+
+
+            <!-- INFORMATION GOES ABOVE HERE -->
+
+			<br/>
+			<br/>
+			<font color="#708899">Last modified: <!--#echo var="LAST_MODIFIED" --></font>
+
+	    </td>
+
+		<td width="5">
+        </td>
+
+		<td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_right_menu.shtml"-->
+
+	    </td>
+
+	</tr>
+    </table>
+</body>
+</html>

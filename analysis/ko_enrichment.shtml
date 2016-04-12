@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>Rice Oligo Array Database</title>
+    <link rel=stylesheet type="text/css" href="../RAD.css">
+</head>
+
+<body>
+    
+    <table>
+
+	<!--#include virtual="/inc/ROAD_inc_header.shtml"--> 
+	
+	<tr>
+	    <td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_left_menu.shtml"-->
+
+	    </td>
+
+        <td width="5">
+        </td>
+
+	    <td class="main" valign="top" width="600">
+            <!-- INFORMATION GOES UNDERNEATH HERE -->
+      	    
+            <h2>KO Enrichment Analysis</h2>
+			
+			<p>
+			Paste MSU/TIGR IDs (e.g., LOC_Os01g02580) or KO IDs (e.g., K02563) in the textbox below and press the submit button. 
+			Alternatively, a file with a list of IDs may also be uploaded. 
+			</p>
+
+			<script type="text/JavaScript">
+				function SetExample(){
+					document.myform.search_text.value='LOC_Os02g54120\nLOC_Os03g57220\nLOC_Os02g20360\nLOC_Os09g02710\nLOC_Os08g44820\nLOC_Os10g39200\nLOC_Os04g39560\nLOC_Os03g52594\nLOC_Os01g47760\nLOC_Os05g48930';
+				}
+			</script>
+
+			<fieldset>
+			<legend>KO Enrichment Analysis</legend>
+			<form name='myform' method="post" action="ko_enrichment.php" enctype="multipart/form-data">
+		    <table>
+        		<tr>
+        		    <td>
+						Upload file (max 5000 identifiers, one per line):
+					</td>
+					<td>
+						<input type="file" name="search_file" size="40">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Identifier terms (max 5000 identifiers, one per line):<br /><br />
+						<INPUT TYPE="button" VALUE="Example" onClick="SetExample()">
+					</td>
+					<td>
+						<textarea name="search_text" id="search_text" rows="12" cols="50"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Identifier type:
+					</td>
+					<td>
+						<input type="radio" name="identifier_type" value="geneid" checked>Gene ID
+						<input type="radio" name="identifier_type" value="koid">KO ID
+					</td>
+				</tr>	
+				<tr>
+					<td>
+					</td>
+					<td>
+						<input type ="submit" value="Submit">&nbsp;&nbsp;
+						<input type ="reset" value="Clear">
+					</td>
+				</tr>
+		    </table> 
+		    </form>
+			</fieldset>
+
+
+            <!-- INFORMATION GOES ABOVE HERE -->
+
+			<br/>
+			<br/>
+			<font color="#708899">Last modified: <!--#echo var="LAST_MODIFIED" --></font>
+
+	    </td>
+
+		<td width="5">
+        </td>
+
+		<td class="menu" valign="top">
+
+            <!--#include virtual="/inc/ROAD_inc_right_menu.shtml"-->
+
+	    </td>
+
+	</tr>
+    </table>
+</body>
+</html>
