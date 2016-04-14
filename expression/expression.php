@@ -19,8 +19,8 @@ if (isset($_GET["platform"])) {
 }
 
 # db queries
-$q_exp_num = "select exp_id from experiment where platform='$platform'";
-$q_sam_num = "select sam_id from sample where platform='$platform'";
+$q_exp_num = "select accession_no from experiment where platform='$platform'";
+$q_sam_num = "select sum(sample) as total from experiment where platform='$platform'";
 
 
 $conn = db_connect();
@@ -28,7 +28,8 @@ $result = @$conn->query($q_exp_num);
 $exp_num = $result->num_rows;
 
 $result = @$conn->query($q_sam_num);
-$sam_num = $result->num_rows;
+
+$sam_num = $result->fetch_assoc();
 
 $experiments = array();
 # get list of experiments in the database
@@ -44,13 +45,13 @@ $conn->close();
 
 do_html_header($doc_path);
 ?>
-<h2>Search Rice <?php echo $platform; ?> Expression Data</h2>
+<h2>Search Rice <?php echo ucfirst($platform); ?> Expression Data</h2>
 <br/>
 <br/>
 
 Number of experiments in database: <b><?php echo $exp_num; ?></b>
 <br/>
-Number of samples/hybridizations in database: <b><?php echo $sam_num; ?></b>
+Number of samples/hybridizations in database: <b><?php echo $sam_num['total']; ?></b>
 
 <br/>
 <br/>
@@ -114,7 +115,8 @@ Number of samples/hybridizations in database: <b><?php echo $sam_num; ?></b>
                     </select>
                     -->
                     <input type="radio" name="platform" value="affymetrix"  <?php if ($platform == 'affymetrix') echo 'checked'; ?> onchange="location.href = 'expression.php?platform=affymetrix';">Affymetrix
-                    <input type="radio" name="platform" value="agilent"  <?php if ($platform == 'agilent') echo 'checked'; ?> onchange="location.href = 'expression.php?platform=agilent';">Agilent
+                    <input type="radio" name="platform" value="agilent(28K-array)"  <?php if ($platform == 'agilent(28K-array)') echo 'checked'; ?> onchange="location.href = 'expression.php?platform=agilent(28K-array)';">Agilent (28K-array)
+                    <input type="radio" name="platform" value="agilent(28K-array)"  <?php if ($platform == 'agilent(4x44K-array)') echo 'checked'; ?> onchange="location.href = 'expression.php?platform=agilent(4x44K-array)';">Agilent (4x44K-array)
                     <input type="radio" name="platform" value="illumina"  <?php if ($platform == 'illumina') echo 'checked'; ?> onchange="location.href = 'expression.php?platform=illumina';">Illumina
                     <input type="radio" name="platform" value="RNA-Seq"  <?php if ($platform == 'RNA-Seq') echo 'checked'; ?> onchange="location.href = 'expression.php?platform=RNA-Seq';">RNA-Seq
 

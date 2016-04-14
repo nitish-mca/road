@@ -32,7 +32,7 @@ $search_text = trim($search_text);
 $post_terms = explode("\n", $search_text);
 $num_post_terms = count($post_terms);
 
-if ($search_text == "") {
+if ($search_text == "") {  
     do_html_header($doc_path);
     echo "No search terms. Please go back and try again!\n";
     do_html_footer($doc_path);
@@ -71,32 +71,26 @@ if ($identifier_type == 'elementid') {
         $search_terms[$i] = "'$search_terms[$i]'";
     }
     $probe_ids = join(",", $search_terms);
-    $query_probe = "select * from probe
+    $query_probe = "select * from test2
 			 where
 			 lower(probeid) in($probe_ids)
 			 and lower(platform) = '$platform'
 			 order by probeid
 			 ";
-} elseif ($identifier_type == 'geneid') {
+} elseif ($identifier_type == 'loci_id') {
     $search_sentences = array();
     foreach ($search_terms as $id) {
-        array_push($search_sentences, "lower(MSU6_id) like '%$id%'");
-        array_push($search_sentences, "lower(RAP3_id) like '%$id%'");
-        array_push($search_sentences, "lower(cDNA_id) like '%$id%'");
+        array_push($search_sentences, "'$id'");
     }
-    $search_sentences = join(" or ", $search_sentences);
-    $query_probe = "select * from probe
-			 where
-			 ($search_sentences)
-			 and lower(platform) = '$platform'
-			 order by probeid
-			 ";
-}
+    $search_term_str = implode(', ',$search_sentences );
 
+    $query_probe = "SELECT * FROM  `test2` WHERE  `loci_id` IN (".$search_term_str.") AND lower(platform) = '".$platform."'";
+}
 $conn = db_connect();
 
 $result = @$conn->query($query_probe);
 $num_probes = $result->num_rows;
+
 
 if ($num_probes == 0) {
     do_html_header($doc_path);
@@ -159,8 +153,8 @@ echo "<h2>Expression Data Search Results</h2><br/>\n";
                 <?php
 # experiment field
 
-                echo "				<select name='exp'>\n";
-                echo "					<option value='0'>-- Select an experiment --</option>\n";
+                echo "<select name='exp'>\n";
+                echo "<option value='0'>-- Select an experiment --</option>\n";
 
                 foreach ($experiments as $experiment) {
                     $exp_id = $experiment[0];
@@ -276,10 +270,10 @@ echo "<table border='1' cellpadding='1' cellspacing='1' rules='cols'>\n";
 
 echo "<tr align=center bgcolor=Orange>\n";
 echo "<td><b>No.</b></td>\n";
-echo "<td><b>Array Element ID</b></td>\n";
+echo "<td><b>Probe ID</b></td>\n ";
 echo "<td><b>Array Platform</b></td>\n";
-echo "<td><b>Matched MSU/TIGR Gene ID</b></td>\n";
-echo "<td><b>Matched RAP3 Gene ID</b></td>\n";
+echo "<td><b>Phytozome ID</b></td>\n";
+echo "<td><b>Probe Sequence</b></td>\n";
 echo "<td><b>Matched KOME cDNA ID</b></td>\n";
 echo "</tr>\n";
 
@@ -295,7 +289,7 @@ for ($i = 0; $i < $num_probes; $i++) {
     echo "&nbsp;</td>\n";
 
     echo "<td>&nbsp;";
-    echo $row['probeid'];
+    echo $row['probe_id'];
     echo "&nbsp;</td>\n";
 
     echo "<td>&nbsp;";
@@ -303,30 +297,11 @@ for ($i = 0; $i < $num_probes; $i++) {
     echo "&nbsp;</td>\n";
 
     echo "<td>";
-    $ids = explode(";", $row['MSU6_id']);
-    sort($ids);
-    foreach ($ids as $id) {
-        if ($id != 'N/A') {
-            $locus = $id;
-            $locus = preg_replace('/\.\d+$/', '', $locus);
-            $locsu_annotation = $annotation[$locus];
-            echo "&nbsp;<a href=http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?db=osa1r6&orf=$id target=_blank>$id</a>&nbsp;<a href=# title=\"$locsu_annotation\">Annotation</a><br/>\n";
-        } else {
-            echo "&nbsp;$id&nbsp;<br/>\n";
-        }
-    }
+    echo $row['phytozome_id'];
     echo "</td>\n";
 
     echo "<td>";
-    $ids = explode(";", $row['RAP3_id']);
-    sort($ids);
-    foreach ($ids as $id) {
-        if ($id != 'N/A') {
-            echo "&nbsp;<a href=http://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/build5?name=$id target=_blank>$id</a>&nbsp;<a href=# title=\"$annotation[$id]\">Annotation</a><br/>\n";
-        } else {
-            echo "&nbsp;$id&nbsp;<br/>\n";
-        }
-    }
+    echo $row['probe_sequence'];
     echo "</td>\n";
 
     echo "<td>";
