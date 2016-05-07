@@ -61,9 +61,19 @@ Number of samples/hybridizations in database: <b><?php echo $sam_num['total']; ?
 <br/>
 <br/>
 
+
 <script type="text/JavaScript">
     function SetExample(){
-    document.myform.search_text.value='FR000120\nFR000159\nFR002641\nFR004789\nFR004789\nFR006791\nFR007482\nFR007866\nFR008342';
+        if($('input[name="identifier_type"]:checked').val() == 'loci_id'){
+            document.myform.search_text.value='FR000120\nFR000159\nFR002641\nFR004789\nFR004789\nFR006791\nFR007482\nFR007866\nFR008342';
+            
+        }else{
+            document.myform.search_text.value = 'FR000120_st\nFR000159_s_st\nFR002641_s_st\nFR004789_st\nFR004789_x_st\nFR006791_st\nFR006791_x_st';
+        }
+    }
+    
+    function resetSearchText(){
+        $('#search_text').val('');
     }
 </script>
 
@@ -94,8 +104,8 @@ Number of samples/hybridizations in database: <b><?php echo $sam_num['total']; ?
                     Identifier type:
                 </td>
                 <td>
-                    <input type="radio" name="identifier_type" value="loci_id" checked>LOCI ID
-                    <input type="radio" name="identifier_type" value="elementid">Microarray Element ID
+                    <input  onClick="resetSearchText()" class = "identifier_type_radio" type="radio" name="identifier_type" value="loci_id" checked>LOCI ID
+                    <input  onClick="resetSearchText()" type="radio" name="identifier_type" class = "identifier_type_radio" value="probe_id">Probe Id
                 </td>
             </tr>
 

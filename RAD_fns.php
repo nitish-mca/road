@@ -3,7 +3,7 @@
 // include this file in all our files
 // this way, every file will contain all the functions
 
-$doc_path = "D:/Websites/ROAD";
+//$doc_path = "D:/Websites/ROAD";
 //$doc_path = "/Users/Peijian/Websites/RAD";
 $doc_path = '/var/www/projects/s';
 
@@ -32,6 +32,7 @@ function do_html_header($doc_path){
 <head>
     <title>Rice Oligonucleotide Array Database</title>
     <link rel=stylesheet type="text/css" href="../RAD.css">
+    <script language="javascript" type="text/javascript" src="../js/jquery-2.2.3.min.js"></script>
 </head>
 
 <body>

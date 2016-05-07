@@ -65,7 +65,7 @@ for ($i = 0; $i < $num_post_terms; $i++) {
 
 $search_terms_combined = join(",", $search_terms);
 
-if ($identifier_type == 'elementid') {
+if ($identifier_type == 'probe_id') {
     for ($i = 0; $i < $num_post_terms; $i++) {
         $search_terms[$i] = preg_replace('/\'/', "''", $search_terms[$i]);
         $search_terms[$i] = "'$search_terms[$i]'";
@@ -73,9 +73,9 @@ if ($identifier_type == 'elementid') {
     $probe_ids = join(",", $search_terms);
     $query_probe = "select * from test2
 			 where
-			 lower(probeid) in($probe_ids)
+			 lower(probe_id) in($probe_ids)
 			 and lower(platform) = '$platform'
-			 order by probeid
+			 order by probe_id
 			 ";
 } elseif ($identifier_type == 'loci_id') {
     $search_sentences = array();
